@@ -33,6 +33,7 @@
                         {{ $post->caption }}
                     </p>
                 </div>
+                @include('comments.sidebar')
             </div>
         </div>
     </div>
