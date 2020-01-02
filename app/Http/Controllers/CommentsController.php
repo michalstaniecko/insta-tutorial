@@ -34,6 +34,11 @@ class CommentsController extends Controller {
         $commentsCount = $comments->count();
         $comments = $comments->latest()->offset($offset)->limit(5)->get();
 
+        $comments =($comments->map(function($comment){
+            $comment->username = $comment->user->username;
+            return $comment;
+        }));
+
         return response()->json(['comments' => $comments, 'count' => $commentsCount]);
     }
 
@@ -58,6 +63,8 @@ class CommentsController extends Controller {
                 'user_id' => auth()->user()->id
             ]
         ));
+
+        $comment->username = $comment->user->username;
 
         return response()->json(['comment'=>$comment, 'commentsCount' => $post->comments()->count()]);
     }

@@ -55,7 +55,7 @@
             }
         },
         mounted() {
-            console.log(document.querySelector('meta[name=csrf-token]').getAttribute('content'));
+            console.log(this.data);
             Comments.get('posts', this.postId, _,(data) => {
                 this.data = data;
             });

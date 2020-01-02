@@ -2,7 +2,7 @@
     <div>
 
         <div>
-            {{ comment.content }}
+            <strong>{{ comment.username }}</strong> {{ comment.content }}
 
         </div>
         <div>

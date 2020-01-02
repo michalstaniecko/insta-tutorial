@@ -1909,7 +1909,7 @@ function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
   mounted: function mounted() {
     var _this = this;
 
-    console.log(document.querySelector('meta[name=csrf-token]').getAttribute('content'));
+    console.log(this.data);
     _helpers_comments__WEBPACK_IMPORTED_MODULE_1__["default"].get('posts', this.postId, _, function (data) {
       _this.data = data;
     });
@@ -37763,7 +37763,8 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("div", [
     _c("div", [
-      _vm._v("\n        " + _vm._s(_vm.comment.content) + "\n\n    ")
+      _c("strong", [_vm._v(_vm._s(_vm.comment.username))]),
+      _vm._v(" " + _vm._s(_vm.comment.content) + "\n\n    ")
     ]),
     _vm._v(" "),
     _c("div", [_c("small", [_vm._v(_vm._s(_vm.comment.created_at))])])
