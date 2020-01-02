@@ -62,7 +62,7 @@
         methods: {
             submitHandler(e) {
                 let content = (e.target.querySelector('textarea#content').value);
-                Comments.save(content, 'posts', this.postId, _, (data)=>{
+                Comments.save(content, this.postId, _, (data)=>{
                     this.data.comments.unshift(data.comment);
                     this.data.commentsCount = data.commentsCount;
                 })

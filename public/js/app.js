@@ -1916,7 +1916,7 @@ function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       var _this2 = this;
 
       var content = e.target.querySelector('textarea#content').value;
-      _helpers_comments__WEBPACK_IMPORTED_MODULE_1__["default"].save(content, 'posts', this.postId, _, function (data) {
+      _helpers_comments__WEBPACK_IMPORTED_MODULE_1__["default"].save(content, this.postId, _, function (data) {
         _this2.data.comments.unshift(data.comment);
 
         _this2.data.commentsCount = data.commentsCount;
@@ -1971,6 +1971,14 @@ function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -1980,8 +1988,16 @@ function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
   props: ['comment'],
   name: "Comment",
   data: function data() {
+    var post = {
+      id: false
+    };
+    post = Object.assign({}, post, {
+      id: this.comment.commentable_id
+    });
     return {
-      data: Object
+      data: Object,
+      formShow: false,
+      post: post
     };
   },
   mounted: function mounted() {
@@ -1992,12 +2008,25 @@ function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     });
   },
   methods: {
-    loadMore: function loadMore() {
+    toggleForm: function toggleForm() {
+      this.formShow = !this.formShow;
+    },
+    submitHandler: function submitHandler(e) {
       var _this2 = this;
 
+      var content = e.target.querySelector('input.content').value;
+      _helpers_comments__WEBPACK_IMPORTED_MODULE_1__["default"].save(content, this.post.id, this.comment.id, function (data) {
+        _this2.data.comments.unshift(data.comment);
+
+        _this2.data.commentsCount = data.commentsCount;
+      });
+    },
+    loadMore: function loadMore() {
+      var _this3 = this;
+
       _helpers_comments__WEBPACK_IMPORTED_MODULE_1__["default"].get('comments', this.comment.id, this.data.comments.length, function (data) {
-        _this2.data = {
-          comments: [].concat(_toConsumableArray(_this2.data.comments), _toConsumableArray(data.comments)),
+        _this3.data = {
+          comments: [].concat(_toConsumableArray(_this3.data.comments), _toConsumableArray(data.comments)),
           commentsCount: data.commentsCount
         };
       });
@@ -37607,51 +37636,104 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm.data.comments
-    ? _c(
-        "div",
-        [
-          _c("comment-item", { attrs: { comment: _vm.comment } }),
-          _vm._v(" "),
-          _vm.data.comments
-            ? _c(
-                "div",
-                { staticClass: "pl-5" },
-                [
-                  _vm._l(_vm.data.comments, function(comment) {
-                    return _c(
-                      "div",
-                      [_c("comment-item", { attrs: { comment: comment } })],
-                      1
+  return _c(
+    "div",
+    [
+      _c("comment-item", { attrs: { comment: _vm.comment } }),
+      _vm._v(" "),
+      _c(
+        "a",
+        {
+          attrs: { href: "#" },
+          on: {
+            click: function($event) {
+              $event.preventDefault()
+              return _vm.toggleForm($event)
+            }
+          }
+        },
+        [_c("small", [_vm._v("Reply")])]
+      ),
+      _vm._v(" "),
+      _vm.formShow
+        ? _c("div", [
+            _c(
+              "form",
+              {
+                attrs: { action: "", method: "post" },
+                on: {
+                  submit: function($event) {
+                    $event.preventDefault()
+                    return _vm.submitHandler($event)
+                  }
+                }
+              },
+              [
+                _c("input", {
+                  attrs: { type: "hidden", name: "parent_id" },
+                  domProps: { value: _vm.comment.id }
+                }),
+                _vm._v(" "),
+                _c("input", {
+                  staticClass: "form-control content",
+                  attrs: {
+                    type: "text",
+                    name: "content-" + _vm.comment.id,
+                    id: "content-" + _vm.comment.id
+                  }
+                }),
+                _vm._v(" "),
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-sm btn-dark",
+                    attrs: { type: "submit" }
+                  },
+                  [_vm._v("Reply")]
+                )
+              ]
+            )
+          ])
+        : _vm._e(),
+      _vm._v(" "),
+      _vm.data.comments
+        ? _c(
+            "div",
+            { staticClass: "pl-5" },
+            [
+              _vm._l(_vm.data.comments, function(comment) {
+                return _c(
+                  "div",
+                  [_c("comment-item", { attrs: { comment: comment } })],
+                  1
+                )
+              }),
+              _vm._v(" "),
+              _vm.data.comments.length < _vm.data.commentsCount
+                ? _c("div", [
+                    _c(
+                      "a",
+                      {
+                        staticClass: "btn btn-sm btn-dark",
+                        attrs: { href: "#" },
+                        on: {
+                          click: function($event) {
+                            $event.preventDefault()
+                            return _vm.loadMore($event)
+                          }
+                        }
+                      },
+                      [_vm._v("Load more comments")]
                     )
-                  }),
-                  _vm._v(" "),
-                  _vm.data.comments.length < _vm.data.commentsCount
-                    ? _c("div", [
-                        _c(
-                          "a",
-                          {
-                            staticClass: "btn btn-sm btn-dark",
-                            attrs: { href: "#" },
-                            on: {
-                              click: function($event) {
-                                $event.preventDefault()
-                                return _vm.loadMore($event)
-                              }
-                            }
-                          },
-                          [_vm._v("Load more comments")]
-                        )
-                      ])
-                    : _vm._e()
-                ],
-                2
-              )
-            : _vm._e()
-        ],
-        1
-      )
-    : _vm._e()
+                  ])
+                : _vm._e()
+            ],
+            2
+          )
+        : _vm._e()
+    ],
+    1
+  )
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -50268,19 +50350,8 @@ __webpack_require__.r(__webpack_exports__);
       console.log(error);
     });
   },
-  save: function save(content, type, postId, parent_id, cb) {
-    var url;
-
-    switch (type) {
-      case 'posts':
-        url = '/api/posts/' + postId + '/comments';
-        break;
-
-      case 'comments':
-        url = '/api/comments/' + postId + '/comments';
-        break;
-    }
-
+  save: function save(content, postId, parent_id, cb) {
+    var url = '/api/posts/' + postId + '/comments';
     axios.post(url, {
       content: content,
       parent_id: parent_id,

@@ -32,18 +32,9 @@ export default {
             })
     },
 
-    save(content, type, postId, parent_id, cb) {
-        let url;
+    save(content, postId, parent_id, cb) {
+        let url = '/api/posts/' + postId + '/comments';
 
-        switch (type) {
-            case 'posts':
-                url = '/api/posts/' + postId + '/comments'
-                break;
-
-            case 'comments':
-                url = '/api/comments/' + postId + '/comments'
-                break
-        }
 
         axios
             .post(url, {

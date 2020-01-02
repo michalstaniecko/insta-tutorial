@@ -1,6 +1,14 @@
 <template>
-    <div v-if="data.comments">
+    <div >
         <comment-item :comment="comment"/>
+        <a href="#" v-on:click.prevent="toggleForm"><small>Reply</small></a>
+        <div v-if="formShow">
+            <form action="" method="post" v-on:submit.prevent="submitHandler">
+                <input  type="hidden" name="parent_id" v-bind:value="comment.id" />
+                <input class="form-control content" type="text"  v-bind:name="'content-' + comment.id"  v-bind:id="'content-'+comment.id" />
+                <button type="submit" class="btn btn-sm btn-dark">Reply</button>
+            </form>
+        </div>
         <div v-if="data.comments" class="pl-5">
             <div v-for="comment in data.comments">
                 <comment-item :comment="comment"/>
@@ -21,8 +29,14 @@
         props: ['comment'],
         name: "Comment",
         data() {
+            let post = {
+                id: false
+            };
+            post = Object.assign({}, post, {id: this.comment.commentable_id})
             return {
-                data: Object
+                data: Object,
+                formShow: false,
+                post: post
             }
         },
         mounted() {
@@ -32,6 +46,16 @@
 
         },
         methods: {
+            toggleForm() {
+                this.formShow = !this.formShow;
+            },
+            submitHandler(e) {
+                let content = (e.target.querySelector('input.content').value);
+                Comments.save(content, this.post.id, this.comment.id, (data)=>{
+                    this.data.comments.unshift(data.comment);
+                    this.data.commentsCount = data.commentsCount;
+                })
+            },
             loadMore() {
 
                 Comments.get('comments',this.comment.id, this.data.comments.length, (data) => {
