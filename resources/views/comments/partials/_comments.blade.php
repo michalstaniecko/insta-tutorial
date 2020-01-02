@@ -1,4 +1,5 @@
-@foreach($comments->sortByDesc('created_at')->values()->all() as $comment )
+
+@foreach($comments->latest()->get() as $comment )
 <div class="{{ empty($nested) ? 'pb-5' : null  }}">
 
     <div>
@@ -18,7 +19,7 @@
 
 
         @include('comments.partials._comments', [
-    'comments'=>$comment->replies,
+    'comments'=>$comment->replies(),
     'nested' => true
     ])
     </div>
