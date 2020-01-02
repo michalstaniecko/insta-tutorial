@@ -1,6 +1,5 @@
 <template>
-    <div class="border">
-        <div>Vue Component</div>
+    <div >
         <div class="pb-3">
 
             <form action="#" method="post" v-on:submit.prevent="submitHandler">
@@ -12,7 +11,7 @@
 
                         <textarea id="content"
                                   type="text"
-                                  class="form-control @error('content') is-invalid @enderror"
+                                  class="form-control"
                                   name="content"
                                   value=""
                                   autocomplete="off" autofocus>
@@ -26,12 +25,14 @@
                 <button type="submit" class="btn btn-primary">Send</button>
             </form>
         </div>
-        <div>
-            <div v-for="comment in comments">
+
+        <div>Comments:</div>
+        <div v-if="data.comments">
+            <div v-for="comment in data.comments">
 
                 <comment :comment="comment"/>
             </div>
-            <div v-if="comments.length < commentsCount">
+            <div v-if="data.comments.length < data.commentsCount">
                 <a href="#" v-on:click.prevent="loadMore" class="btn btn-sm btn-dark">Load more comments</a>
             </div>
         </div>
@@ -41,6 +42,7 @@
 
 <script>
     import Comment from "./Comments/Comment";
+    import Comments from "../helpers/comments";
 
     export default {
         name: "Comments",
@@ -48,43 +50,31 @@
         props: ['postId'],
         data() {
             return {
-                comments: '',
-                commentsCount: '',
-                offset: 0,
+                data: Object
             }
         },
         mounted() {
-
-            axios
-                .get('/api/posts/' + this.postId + '/comments')
-                .then((response) => {
-                    this.comments = (response.data.comments);
-                    this.commentsCount = response.data.count;
-                    this.offset= this.comments.length;
-                })
-                .catch(error => {
-                    console.log(error);
-                })
+            console.log(document.querySelector('meta[name=csrf-token]').getAttribute('content'));
+            Comments.get('posts', this.postId, _,(data) => {
+                this.data = data;
+            });
         },
         methods: {
-            submitHandler() {
-                console.log('submitHandler');
+            submitHandler(e) {
+                let content = (e.target.querySelector('textarea#content').value);
+                Comments.save(content, 'posts', this.postId, _, (data)=>{
+                    this.data.comments.unshift(data.comment);
+                    this.data.commentsCount = data.commentsCount;
+                })
             },
             loadMore() {
-                axios
-                    .get('/api/posts/' + this.postId + '/comments', {
-                        params: {
-                            offset: this.comments.length
-                        }
-                    })
-                    .then((response) => {
-                        this.comments = [...this.comments, ...response.data.comments];
-                        this.commentsCount = response.data.count;
-                        this.offset= this.comments.length
-                    })
-                    .catch(error => {
-                        console.log(error);
-                    })
+
+                Comments.get('posts', this.postId, this.data.comments.length,(data) => {
+                    this.data = {
+                        comments: [...this.data.comments, ...data.comments],
+                        commentsCount: data.commentsCount
+                    }
+                });
             }
         }
     }

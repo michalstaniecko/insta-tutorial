@@ -1,12 +1,12 @@
 <template>
-    <div>
+    <div v-if="data.comments">
         <comment-item :comment="comment"/>
-        <div v-if="replies" class="pl-5">
-            <div v-for="comment in replies">
+        <div v-if="data.comments" class="pl-5">
+            <div v-for="comment in data.comments">
                 <comment-item :comment="comment"/>
             </div>
 
-            <div v-if="replies.length < repliesCount">
+            <div v-if="data.comments.length < data.commentsCount">
                 <a href="#" v-on:click.prevent="loadMore" class="btn btn-sm btn-dark">Load more comments</a>
             </div>
         </div>
@@ -15,39 +15,31 @@
 
 <script>
     import CommentItem from "./CommentItem";
+    import Comments from "../../helpers/comments";
     export default {
         components: {CommentItem},
         props: ['comment'],
         name: "Comment",
         data() {
             return {
-                replies: [],
-                repliesCount: '',
-                offset: 0,
+                data: Object
             }
         },
         mounted() {
-            axios
-                .get('/api/comments/' + this.comment.id + '/comments')
-                .then(response => {
-                    this.replies = response.data.comments;
-                    this.repliesCount = response.data.count;
-                })
+            Comments.get('comments',this.comment.id, _, (data) => {
+               this.data = data;
+            });
+
         },
         methods: {
             loadMore() {
 
-                axios
-                    .get('/api/comments/' + this.comment.id + '/comments', {
-                        params: {
-                            offset: this.replies.length
-                        }
-                    })
-                    .then(response => {
-                        this.replies = [...this.replies, ...response.data.comments];
-                        this.repliesCount = response.data.count;
-                        this.offset= this.replies.length
-                    })
+                Comments.get('comments',this.comment.id, this.data.comments.length, (data) => {
+                    this.data = {
+                        comments: [...this.data.comments, ...data.comments],
+                        commentsCount: data.commentsCount
+                    }
+                });
             }
         }
     }

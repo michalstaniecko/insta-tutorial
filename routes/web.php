@@ -36,3 +36,5 @@ Route::patch('/profile/{user}', 'ProfilesController@update')->name('profile.upda
 
 Route::get('/api/posts/{post}/comments', 'CommentsController@fetchComments');
 Route::get('/api/comments/{comment}/comments', 'CommentsController@fetchReplyComments');
+Route::post('/api/posts/{post}/comments', 'CommentsController@ajaxStore');
+Route::post('/api/comments/{comment}/comments', 'CommentsController@fetchReplyComments');

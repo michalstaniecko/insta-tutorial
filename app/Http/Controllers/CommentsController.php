@@ -45,4 +45,20 @@ class CommentsController extends Controller {
         $comments = $comments->latest()->offset($offset)->limit(5)->get();
         return response()->json(['comments' => $comments, 'count' => $count]);
     }
+
+    public function ajaxStore(Post $post) {
+
+        $data = \request()->validate([
+            'content' => 'required',
+            'parent_id' => ''
+        ]);
+        $comment = $post->comments()->create(array_merge(
+            $data,
+            [
+                'user_id' => auth()->user()->id
+            ]
+        ));
+
+        return response()->json(['comment'=>$comment, 'commentsCount' => $post->comments()->count()]);
+    }
 }
