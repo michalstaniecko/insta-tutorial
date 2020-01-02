@@ -14,10 +14,9 @@ class CommentsController extends Controller
 
     public function store(Post $post) {
         $data = \request()->validate([
-           'comment' => 'required',
+           'content' => 'required',
             'parent_id' => ''
         ]);
-
         $post->comments()->create(array_merge(
             $data,
             [
@@ -25,5 +24,6 @@ class CommentsController extends Controller
             ]
         ));
         return redirect('/p/'.$post->id);
+
     }
 }

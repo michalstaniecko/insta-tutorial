@@ -5,17 +5,17 @@
         @csrf
         <div class="form-group row">
             <div class="col">
-                <label for="comment" class="col-md-4 col-form-label ">{{ $label ?? 'Comment'  }}:</label>
+                <label for="content" class="col-md-4 col-form-label ">{{ $label ?? 'Comment'  }}:</label>
 
-                <textarea id="comment"
+                <textarea id="content"
                           type="text"
-                          class="form-control @error('comment') is-invalid @enderror"
-                          name="comment"
-                          value="{{ old('comment') }}"
+                          class="form-control @error('content') is-invalid @enderror"
+                          name="content"
+                          value="{{ old('content') }}"
                           autocomplete="off" autofocus>
                                 </textarea>
 
-                @error('comment')
+                @error('content')
                 <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>

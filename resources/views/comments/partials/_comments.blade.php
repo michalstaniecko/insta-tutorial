@@ -3,7 +3,7 @@
 
     <div>
         <strong>{{ $comment->user->username }}</strong>
-        {{ $comment->comment }}
+        {{ $comment->content }}
 
         <div>
 
