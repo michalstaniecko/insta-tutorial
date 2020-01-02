@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div v-if="currentUserId != userId">
 
         <button
             class="btn btn-primary btn-sm ml-4"
@@ -14,7 +14,7 @@
 <script>
     export default {
 
-        props: ['userId', 'follows'],
+        props: ['userId','currentUserId', 'follows'],
 
         mounted() {
             console.log('Component mounted.')

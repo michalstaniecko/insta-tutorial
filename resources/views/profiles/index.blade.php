@@ -14,7 +14,7 @@
                         <div class="h4">
                             {{ $user->username }}
                         </div>
-                        <follow-botton user-id="{{ $user->id }}" follows="{{ $follows }}"></follow-botton>
+                        <follow-botton user-id="{{ $user->id }}" current-user-id="{{ auth()->user()->id }}" follows="{{ $follows }}"></follow-botton>
                     </div>
                     @can('update', $user->profile)
                         <a href="/p/create">Add new post</a>
