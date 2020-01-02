@@ -1840,6 +1840,7 @@ module.exports = {
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Comments_Comment__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Comments/Comment */ "./resources/js/components/Comments/Comment.vue");
 /* harmony import */ var _helpers_comments__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../helpers/comments */ "./resources/js/helpers/comments.js");
+/* harmony import */ var _Comments_CommentItem__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Comments/CommentItem */ "./resources/js/components/Comments/CommentItem.vue");
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
 
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance"); }
@@ -1892,9 +1893,11 @@ function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 //
 
 
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "Comments",
   components: {
+    CommentItem: _Comments_CommentItem__WEBPACK_IMPORTED_MODULE_2__["default"],
     Comment: _Comments_Comment__WEBPACK_IMPORTED_MODULE_0__["default"]
   },
   props: ['postId'],
@@ -1915,11 +1918,12 @@ function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     submitHandler: function submitHandler(e) {
       var _this2 = this;
 
-      var content = e.target.querySelector('textarea#content').value;
-      _helpers_comments__WEBPACK_IMPORTED_MODULE_1__["default"].save(content, this.postId, _, function (data) {
+      var content = e.target.querySelector('textarea#content');
+      _helpers_comments__WEBPACK_IMPORTED_MODULE_1__["default"].save(content.value, this.postId, _, function (data) {
         _this2.data.comments.unshift(data.comment);
 
         _this2.data.commentsCount = data.commentsCount;
+        content.value = '';
       });
     },
     loadMore: function loadMore() {
@@ -37549,7 +37553,7 @@ var render = function() {
             _vm._l(_vm.data.comments, function(comment) {
               return _c(
                 "div",
-                [_c("comment", { attrs: { comment: comment } })],
+                [_c("comment-item", { attrs: { comment: comment } })],
                 1
               )
             }),

@@ -30,7 +30,7 @@
         <div v-if="data.comments">
             <div v-for="comment in data.comments">
 
-                <comment :comment="comment"/>
+                <comment-item :comment="comment"/>
             </div>
             <div v-if="data.comments.length < data.commentsCount">
                 <a href="#" v-on:click.prevent="loadMore" class="btn btn-sm btn-dark">Load more comments</a>
@@ -43,10 +43,11 @@
 <script>
     import Comment from "./Comments/Comment";
     import Comments from "../helpers/comments";
+    import CommentItem from "./Comments/CommentItem";
 
     export default {
         name: "Comments",
-        components: {Comment},
+        components: {CommentItem, Comment},
         props: ['postId'],
         data() {
             return {
@@ -61,10 +62,11 @@
         },
         methods: {
             submitHandler(e) {
-                let content = (e.target.querySelector('textarea#content').value);
-                Comments.save(content, this.postId, _, (data)=>{
+                let content = e.target.querySelector('textarea#content');
+                Comments.save(content.value, this.postId, _, (data)=>{
                     this.data.comments.unshift(data.comment);
                     this.data.commentsCount = data.commentsCount;
+                    content.value = '';
                 })
             },
             loadMore() {
